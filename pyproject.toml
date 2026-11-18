@@ -1,0 +1,32 @@
+[project]
+name = "aidl-mlops"
+version = "0.1.0"
+description = "Course exercises (MLOps module), all sessions in one environment"
+requires-python = ">=3.12"
+dependencies = [
+    "torch",
+    "torchvision",
+    "numpy",
+    "pandas",
+    "pillow",
+    "matplotlib",
+    "ray[tune]",
+]
+
+[dependency-groups]
+dev = [
+    "ruff",
+    "poethepoet",
+]
+
+[tool.uv]
+package = false  # exercises are scripts, not an installable package
+
+[tool.ruff]
+extend-exclude = [".venv", "session-2/data"]
+
+[tool.poe.tasks]
+lint = "ruff check ."
+format-check = "ruff format --check ."
+format = "ruff format ."
+all = ["lint", "format-check"]

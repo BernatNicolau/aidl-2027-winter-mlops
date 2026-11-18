@@ -2,21 +2,27 @@ import argparse
 
 import matplotlib.pyplot as plt
 import torch
-import torch.nn as nn
-import torch.optim as optim
-from torch.utils.data import DataLoader
-
 from dataset import MyDataset
 from model import MyModel
+from torch import nn, optim
+from torch.utils.data import DataLoader
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--n_samples", help="amount of samples to train with", type=int, default=1000)
-    parser.add_argument("--n_features", help="amount of features per sample", type=int, default=20)
-    parser.add_argument("--n_hidden", help="amount of hidden neurons", type=int, default=64)
+    parser.add_argument(
+        "--n_samples", help="amount of samples to train with", type=int, default=1000
+    )
+    parser.add_argument(
+        "--n_features", help="amount of features per sample", type=int, default=20
+    )
+    parser.add_argument(
+        "--n_hidden", help="amount of hidden neurons", type=int, default=64
+    )
     parser.add_argument("--n_outputs", help="amount of outputs", type=int, default=10)
-    parser.add_argument("--epochs", help="number of epochs to train", type=int, default=5)
+    parser.add_argument(
+        "--epochs", help="number of epochs to train", type=int, default=5
+    )
     parser.add_argument("--batch_size", help="batch size", type=int, default=100)
     parser.add_argument("--lr", help="learning rate", type=float, default=0.1)
     args = parser.parse_args()
@@ -51,7 +57,7 @@ def main():
             epoch_loss += loss.item()
             n_batches += 1
         avg_loss = epoch_loss / n_batches
-        print(f"Epoch {epoch+1}/{args.epochs} - Avg Loss: {avg_loss:.4f}")
+        print(f"Epoch {epoch + 1}/{args.epochs} - Avg Loss: {avg_loss:.4f}")
 
     plt.plot(loss_history)
     plt.title("Training loss")

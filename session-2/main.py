@@ -1,8 +1,8 @@
-import torch
+from pathlib import Path
 
+import torch
 from dataset import MyDataset
 from model import MyModel
-from utils import accuracy
 
 device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 
@@ -18,9 +18,11 @@ def eval_single_epoch():
 
 
 def train_model(config):
-    
-    my_dataset = MyDataset(...)
-    my_model = MyModel(...).to(device)
+
+    my_dataset = MyDataset(
+        images_path=config["images_path"], labels_path=config["labels_path"]
+    )
+    my_model = MyModel(hidden_size=config["hidden_size"]).to(device)
 
     for epoch in range(config["epochs"]):
         train_single_epoch(...)
@@ -30,9 +32,12 @@ def train_model(config):
 
 
 if __name__ == "__main__":
-
+    DATA_DIR = Path(__file__).parent / "data"
     config = {
-        "hyperparam_1": 1,
-        "hyperparam_2": 2,
+        "images_path": DATA_DIR / "data" / "data",
+        "labels_path": DATA_DIR / "chinese_mnist.csv",
+        "epochs": 100,
+        "hidden_size": 128,
     }
+
     train_model(config)
