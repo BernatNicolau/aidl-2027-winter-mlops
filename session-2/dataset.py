@@ -1,15 +1,18 @@
-import torch
 import pandas as pd
-from PIL import Image
+import torch
 
 
 class MyDataset(torch.utils.data.Dataset):
 
     def __init__(self, images_path: str, labels_path: str):
-        pass
+        super().__init__()
+        self.images_path = images_path
+        self.labels_path = labels_path
+        self.data = pd.read_csv(self.images_path)
+        self.labels = pd.read_csv(self.labels_path)
 
-    def __len__(self) -> int:
-        pass
+    def __len__(self):
+        return len(self.data)
 
-    def __getitem__(self, idx: int):
-        pass
+    def __getitem__(self, idx):
+        return self.data.iloc[idx], self.labels.iloc[idx]

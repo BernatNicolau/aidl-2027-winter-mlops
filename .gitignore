@@ -218,3 +218,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Session 2 dataset (downloaded from Kaggle)
+session-2/data/
