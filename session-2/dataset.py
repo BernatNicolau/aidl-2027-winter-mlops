@@ -2,6 +2,7 @@ from pathlib import Path
 
 import pandas as pd
 import torch
+from torch.utils.data import DataLoader, random_split
 from torchvision.io import read_image
 
 
@@ -25,3 +26,11 @@ class MyDataset(torch.utils.data.Dataset):
         label = thislabel["code"] - 1
         label_tensor = torch.tensor(label, dtype=torch.long)
         return image, label_tensor
+
+
+def get_dataloaders(
+    images_path: Path, labels_path: str | Path, batch_size: int = 64, seed=0
+):
+    dataset = MyDataset(images_path, labels_path)
+    dataset_train, dataset_validate, dataset_test = random_split(dataset)
+    data_loader = DataLoader(dataset, batch_size, True)

@@ -14,15 +14,17 @@ This is a student's fork of a postgraduate Deep Learning course repo (MLOps modu
     `notes/README.md`. File names are prefixed and ordered: `dl-NN-` for deep learning
     (`dl-01-pytorch-data.md`, `dl-02-pytorch-tensors.md`, `dl-03-pytorch-models-and-loss.md`) and
     `mlops-NN-` for real MLOps topics (hyperparameter tuning, experiment tracking,
-    reproducibility, packaging, deployment; none yet), and `dev-NN-` for general software
-    engineering (`dev-01-python-env-and-paths.md`, `dev-02-git-fork-workflow.md`). Put any concept that would still be true in another
+    reproducibility, packaging, deployment; none yet), `dev-NN-` for general software
+    engineering (`dev-01-python-env-and-paths.md`, `dev-02-git-fork-workflow.md`), and `agent-NN-` for
+    agentic / LLM-assisted coding (`agent-01-claude-code-config.md`: CLAUDE.md, memory, hooks). Put any concept that would still be true in another
     session here. `NN` is the reading order (data -> tensors -> models and loss; env -> git). Do not be
     limited by the existing files: create as many new topic files as needed (e.g. training
     loops, optimizers, evaluation, hyperparameter tuning, experiment tracking, Docker), give
     them the next number, split a file when it grows to cover several topics, and list
     every new file in `notes/README.md`.
-    Keep the notes on **deep learning and MLOps**; do not write notes on editor
-    shortcuts, VS Code or other IDE tooling.
+    Keep the notes on **deep learning, MLOps and agentic coding** (Claude Code, LLM-assisted
+    development are of interest to me); do not write notes on editor shortcuts, VS Code or
+    other IDE tooling.
   - `notes/session-N.md` is the study file for that exercise: goal (what the session
     asks), the data/setup, the concepts **that are new in this session**, how it was
     achieved (timeline, problems hit and fixed, verification), and a status checklist;
@@ -36,10 +38,11 @@ This is a student's fork of a postgraduate Deep Learning course repo (MLOps modu
   After explaining a concept, fixing a bug, or changing the setup, add a short factual
   entry (the rule, why, the gotcha) in the right place in the same turn, avoid duplicates,
   and tell me in one line what you updated.
-  **This applies to every reply, including short answers to quick questions** ("how do I
-  X?", "what does Y do?"): if the answer teaches a concept, a command or a gotcha, update
-  the notes in that same turn, before finishing. Before sending any reply, check: "did I
-  explain or change something? then notes updated?" Never wait to be asked.
+- **Teach the industry standard.** The goal is to complete the exercises *and* to know how this
+  is done in practice. Base explanations and code review on industry-standard practice
+  (project structure, naming, config, train/val/test, reproducibility, tooling). When the
+  course skeleton deviates from the standard, say so, tell me which way I'm following and why,
+  and note both in `notes/` (see `dev-04-ml-project-structure.md`).
 - I'm new to torchvision, uv and Mac/VS Code, so short explanations of tooling are welcome.
 
 ## Setup facts
@@ -58,6 +61,8 @@ This is a student's fork of a postgraduate Deep Learning course repo (MLOps modu
 - `session-2/data/` (Chinese MNIST from Kaggle) is git-ignored. Download command is in
   `notes/session-2.md`.
 - The type checker is intentionally disabled.
+- A `Stop` hook (`.claude/settings.json` + `.claude/hooks/notes-check.sh`) reminds Claude once
+  per turn to update the notes (it is what enforces the notes rule above). Do not remove it.
 
 ## Session 2 status (update as it progresses)
 

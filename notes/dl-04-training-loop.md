@@ -27,7 +27,7 @@ for x, y in dataloader:
   (`epoch_loss / n_batches`) for printing. A noisy per-step curve is normal with
   small batches.
 - With a smaller last batch, a plain mean of batch losses is slightly biased; weight by
-  batch size if it matters (relevant once you add validation).
+  batch size if it matters (see [dl-05-train-eval-split.md](dl-05-train-eval-split.md)).
 - `matplotlib`: `plt.plot(history)`, then `plt.show()`. Headless runs (no display):
   `MPLBACKEND=Agg python script.py` (it only warns that `show()` does nothing).
 
@@ -40,7 +40,13 @@ else:                                    device = torch.device("cpu")
 ```
 
 - On a Mac the GPU backend is `mps`, not `cuda`. A plain `cuda`-or-`cpu` check silently
-  leaves the Mac GPU unused.
+  leaves the Mac GPU unused. Macs have no CUDA (NVIDIA only).
+- MPS = Metal Performance Shaders, Apple's GPU framework; PyTorch uses it to run tensors on
+  the GPU of Apple Silicon (M1 and later). CPU and GPU share the same (unified) memory.
+- Gotchas: no `float64` on MPS (use `float32`); a few ops are not implemented and raise an
+  error, `PYTORCH_ENABLE_MPS_FALLBACK=1` runs those on the CPU; tiny models may not be
+  faster than CPU because of the transfer overhead; results can differ slightly in the
+  last decimals between `mps` and `cpu`.
 - `model.to(device)` moves the parameters in place; tensors need `x = x.to(device)`
   (it returns a new tensor).
 

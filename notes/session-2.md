@@ -144,6 +144,42 @@ The `Dataset`/`DataLoader` basics (`__getitem__`, `__len__`, batching) are in
   `value` produced).
 - A random model should start near `ln(15) ≈ 2.71`.
 
+### Training and evaluation (design for `main.py`)
+
+General rules in [dl-04-training-loop](dl-04-training-loop.md) and
+[dl-05-train-eval-split](dl-05-train-eval-split.md). Applied here:
+
+- Review of the first `main.py` (dataset + model loading worked: 15000 samples, image
+  `[1, 64, 64]` float32, label long, output `[1, 15]`). Still missing: device `mps` branch
+  (it resolved to `cpu` although MPS is available), train/validation split, `DataLoader`s,
+  loss, optimizer, `lr` and `batch_size` in `config`, the `...` placeholders, and importing
+  `accuracy` from `utils`.
+- Split with `random_split(my_dataset, [n_train, n_val], generator=...manual_seed(42))`;
+  `shuffle=True` on the train loader only. `main.py` had no `DataLoader` yet.
+- Decision: the skeleton does not say where loaders live (it only creates the dataset and
+  model in `train_model`). We follow the industry standard: a `get_dataloaders(...)`
+  factory in `dataset.py` (dataset -> seeded split -> one loader per split, `batch_size`
+  from `config`), called from `train_model`. No separate `dataloader.py`. It also lets
+  `main.py` and the Ray script (`main_hyperparam_optimize.py`) share it.
+  Signature: `get_dataloaders(images_path, labels_path, batch_size=64, val_ratio=0.15,
+  test_ratio=0.15, seed=42)`: `batch_size` is passed from `config` (tunable), ratios and seed
+  are defaults; `dataset.py` must not import `main` (circular import). Builds `MyDataset`
+  itself and returns three `DataLoader`s (`tuple[DataLoader, DataLoader, DataLoader]`):
+  `train_loader, val_loader, test_loader`; the test loader is only used once at the end. See
+  [dev-04-ml-project-structure](dev-04-ml-project-structure.md).
+- `train_single_epoch` trains (`model.train()`, five-step loop); `eval_single_epoch` uses
+  `model.eval()` + `torch.no_grad()`; both return mean loss and accuracy weighted by batch size.
+- `epochs: 100` is too many for a first test; use 3-5 until the loop works.
+- `__getitem__` reads a JPG and does a pandas `.iloc` per call; `num_workers` speeds up an
+  epoch if it is slow.
+
+- Order: split the dataset first (`random_split` -> `Subset`s), then one `DataLoader` per
+  subset; never split a loader (leakage, and shuffle differs per split).
+- Imports in `dataset.py`: `import torch` (for `torch.tensor`, `torch.long`, `torch.Generator`)
+  and `from torch.utils.data import Dataset, DataLoader, random_split` are not redundant: one
+  gives the namespace, the other short names. Pick one style per file; `ruff` flags unused
+  imports (`F401`). See [dev-01-python-env-and-paths](dev-01-python-env-and-paths.md).
+
 ### Dependencies
 
 - Env setup is as in [session 1](session-1.md) (`.venv` + `uv`).

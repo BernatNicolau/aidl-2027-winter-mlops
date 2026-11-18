@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/notes-check.sh",
+            "timeout": 10,
+            "statusMessage": "Notes check..."
+          }
+        ]
+      }
+    ]
+  }
+}

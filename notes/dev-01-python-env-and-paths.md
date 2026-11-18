@@ -33,6 +33,17 @@
 - `ruff check` also parses files: placeholder `def f(...)` from the course skeletons are
   reported as `invalid-syntax` until replaced with real parameters.
 
+## Imports: `import torch` vs `from torch.utils.data import DataLoader`
+
+- Both reach the same objects; the difference is only the name you type. `import torch`
+  gives the `torch` namespace (`torch.tensor`, `torch.Generator`); `from ... import X` binds
+  `X` directly. Keeping both in one file is normal when you use `torch.` for the core API and
+  want short names for frequently used classes.
+- Be consistent within a file (either `torch.utils.data.Dataset` or `Dataset` everywhere).
+  Common practice: `import torch` + `from torch.utils.data import Dataset, DataLoader,
+  random_split`.
+- An import that is never used is the real redundancy; `ruff check` reports it (`F401`).
+
 ## Paths
 
 - A relative path like `'data/x.csv'` resolves against the **current working directory**

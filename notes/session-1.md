@@ -37,7 +37,9 @@ python session-1/main.py --n_samples 100000 --n_features 10 --n_hidden 20 --n_ou
   `loss.item()` logged per step and averaged per epoch.
   See [dl-04-training-loop.md](dl-04-training-loop.md).
 - **Device**: CUDA, else Apple `mps`, else CPU; both the model and each batch are moved
-  with `.to(device)`.
+  with `.to(device)`. The Mac has no CUDA; `mps` is Apple's GPU backend (no `float64`,
+  some ops missing, small models may gain little). See
+  [dl-04-training-loop.md](dl-04-training-loop.md).
 - **CLI arguments**: all hyperparameters (`--lr`, `--epochs`, `--batch_size`, sizes) come
   from `argparse`, so experiments need no code edits.
   See [dev-03-cli-arguments.md](dev-03-cli-arguments.md).
