@@ -2,4 +2,6 @@ matplotlib
 numpy
 Pillow
 torch
+torchvision
+pandas
 ray

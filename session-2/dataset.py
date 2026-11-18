@@ -1,18 +1,27 @@
+from pathlib import Path
+
 import pandas as pd
 import torch
+from torchvision.io import read_image
 
 
 class MyDataset(torch.utils.data.Dataset):
-
-    def __init__(self, images_path: str, labels_path: str):
+    def __init__(self, images_path: Path, labels_path: str | Path):
         super().__init__()
-        self.images_path = images_path
-        self.labels_path = labels_path
-        self.data = pd.read_csv(self.images_path)
+        self.images_path = Path(images_path)
+        self.labels_path = Path(labels_path)
         self.labels = pd.read_csv(self.labels_path)
 
     def __len__(self):
-        return len(self.data)
+        return len(self.labels)
 
     def __getitem__(self, idx):
-        return self.data.iloc[idx], self.labels.iloc[idx]
+        thislabel = self.labels.iloc[idx]
+        image_path = (
+            self.images_path
+            / f"input_{thislabel['suite_id']}_{thislabel['sample_id']}_{thislabel['code']}.jpg"
+        )
+        image = read_image(str(image_path)).float() / 255.0
+        label = thislabel["code"] - 1
+        label_tensor = torch.tensor(label, dtype=torch.long)
+        return image, label_tensor
